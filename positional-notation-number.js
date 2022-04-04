@@ -7,8 +7,9 @@ class PositionalNotationNumber {
 
   get base10Number() {
     let number = 0;
+    const positions = this.positions;
     for (let i = 0; i < this.digits.length; i++) {
-      number += this.digits[i] * this.positions[i];
+      number += this.digits[i] * positions[i];
     }
     return number;
   }
@@ -38,8 +39,8 @@ class PositionalNotationNumber {
   }
 
   static convertBase = function ({ numBase10, base = 2 }) {
-    const maxPosition = PositionalNotationNumber.findMaxPosition({ numBase10, base });
-    const positions = PositionalNotationNumber.calculatePositions({ base, length: maxPosition + 1 });
+    const maxPositionIndex = PositionalNotationNumber.findMaxPositionIndex({ numBase10, base });
+    const positions = PositionalNotationNumber.calculatePositions({ base, length: maxPositionIndex + 1 });
 
     const digits = [];
     for (let p of positions) {
@@ -49,21 +50,8 @@ class PositionalNotationNumber {
     return new PositionalNotationNumber({ base, digits });
   };
 
-  static findMaxPosition = function ({ numBase10, base = 2 }) {
-    let val = 0;
-    let position = 0;
-    while (numBase10 > val) {
-      val = Math.pow(base, position);
-
-      if (numBase10 < val) {
-        break;
-      }
-
-      position++;
-    }
-
-    const maxPosition = position > 1 ? position - 1 : 0;
-    return maxPosition;
+  static findMaxPositionIndex = function ({ numBase10, base = 2 }) {
+    return Math.floor(Math.log(numBase10) / Math.log(base));
   };
 }
 
